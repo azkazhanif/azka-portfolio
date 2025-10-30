@@ -2,6 +2,16 @@ import { Experience } from "@/types/Experience";
 
 export const experiences: Experience[] = [
   {
+    id: 5,
+    title: "PT. Pratama Abadi Industri",
+    position: "Fullstack Developer",
+    description: `
+        I was responsible for developing internal systems to automate key business processes, covering the entire cycle from brainstorming and design to development, testing, and deployment. One of my main projects was building and enhancing the Master Material Inventory feature, which automated the management of materials, vendors, and color lists, improving overall accuracy and efficiency. I also optimized SQL queries and backend logic to enhance data retrieval speed and system performance. In addition, I contributed to designing and implementing user-friendly, responsive interfaces focused on improving user experience and accessibility across various devices.
+    `,
+    duration: "June 2025 - Now",
+    image: "/images/experiences/mattel.png",
+  },
+  {
     id: 1,
     title: "PT. Mattel Indonesia",
     position: "Fullstack Developer Intern",
