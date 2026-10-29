@@ -1,6 +1,6 @@
 # CLAUDE.md — azka-portfolio
 
-Portfolio pribadi Azka Zufar Hanif (azka.dev). Pemilik berkomunikasi dalam **Bahasa Indonesia** — balas dalam Bahasa Indonesia; konten di website tetap **bahasa Inggris**.
+Portfolio pribadi Azka Zufar Hanif — brand **AZH**, domain **azuha.my.id**. Pemilik berkomunikasi dalam **Bahasa Indonesia** — balas dalam Bahasa Indonesia; konten di website tetap **bahasa Inggris**.
 
 Rencana & keputusan desain ada di `PRD.md` (baca dulu sebelum mengubah tampilan/animasi). Tahap 1–5 sudah selesai; tahap 6 (QA) belum.
 
@@ -22,10 +22,11 @@ Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 (config di 
 ## Struktur
 
 - `src/app/page.tsx` — beranda: Preloader → Navbar → Hero → About → Service → Tools → Experience → Portfolio → Contact.
-- `src/app/portfolio/[slug]/page.tsx` — halaman detail project.
+- `src/app/portfolio/[slug]/page.tsx` — server: `generateMetadata` (title/description/OG per project), `generateStaticParams` (SSG), JSON-LD; UI-nya di `ProjectDetail.tsx` (client).
+- `src/app/sitemap.ts`, `robots.ts` — SEO; sitemap otomatis ikut `src/data/portfolio.ts`. `opengraph-image.jpg` = thumbnail share beranda (statis, JPEG < 300 KB supaya muncul di WhatsApp; gambar utama project juga dijaga < 300 KB). `icon.tsx`/`apple-icon.tsx` = favicon kepala di lingkaran hijau, dari `_assets/profile-head.png`.
 - `src/app/layout.tsx` — metadata, script anti-flash tema, font (Poppins + subset Noto Sans JP/KR untuk preloader).
 - `src/containers/home/<section>/index.tsx` — tiap section beranda.
-- `src/components/` — Navbar, Preloader, ThemeToggle, ScrollEffects, PageTransition + TransitionLink, LenisWrapper, CustomCursor, ProjectPlaceholder. (`Footer/` tidak dipakai.)
+- `src/components/` — Navbar, Preloader, ThemeToggle, ScrollEffects, PageTransition + TransitionLink, LenisWrapper, CustomCursor, ProjectPlaceholder, ImageLightbox (viewer gambar di detail project; hero + `gallery` jadi satu urutan). (`Footer/` tidak dipakai.)
 - `src/data/*.ts` + `src/types/*.ts` — **sumber konten website** (portfolio, experiences, services, tools). Website publik membaca data statis ini, bukan database.
 - `src/lib/theme.ts` — `themeColor(token, alpha)` untuk warna di tween GSAP.
 - `src/lib/scroll.ts` — `setScrollLock()` / `isScrollLocked()`.
@@ -65,13 +66,13 @@ Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 (config di 
 
 ## Konten
 
-- Email kontak: **creativewithazka@gmail.com**. WhatsApp: `https://wa.me/6282214984819`. Domain: `https://azka.dev`. Branding "Antigravity" sudah dihapus — jangan dipakai lagi.
-- Tambah/ubah project di `src/data/portfolio.ts` (urutan array = urutan tampil; project terbaru di depan). Field opsional `role` dan `challenge` mengganti teks default di halaman detail. `image: ""` → otomatis tampil placeholder; `description`/`duration` kosong → "Coming soon".
+- Email kontak: **creativewithazka@gmail.com**. WhatsApp: `https://wa.me/6282214984819`. Domain: `https://azuha.my.id` (dulu azka.dev — jangan dipakai lagi); brand/logo: **AZH**. URL & identitas situs di `src/lib/site.ts` (dipakai metadata, sitemap, robots, JSON-LD). Branding "Antigravity" sudah dihapus — jangan dipakai lagi.
+- Tambah/ubah project di `src/data/portfolio.ts` (urutan array = urutan tampil; project terbaru di depan). Field opsional `role` dan `challenge` mengganti teks default di halaman detail; `features` (list Key Features), `gallery` (`{src, caption}[]`, section Screens) dan `link` (tombol Live Preview — tidak dirender kalau kosong, untuk project internal). `description` boleh multi-paragraf (pisahkan dengan baris kosong). Gambar per project boleh di subfolder, mis. `public/images/portfolio/rbs/`. `image: ""` → otomatis tampil placeholder; `description`/`duration` kosong → "Coming soon".
 - Tambah tools di `src/data/tools.ts` (section Tools dirender dari data ini).
 
 ## Belum selesai / perlu diisi pemilik
 
-- Gambar & durasi untuk Room Booking System, FraudLens, Saldoin; role Room Booking & Saldoin.
 - `public/images/about_parallax.png` masih bertuliskan "ANTIGRAVITY" di dalam gambar.
-- Link placeholder: tombol Resume (About), "View Proof" (Experience), "Live Preview" (detail project), Instagram/LinkedIn/Github (Contact).
+- Tombol Resume (About) & "View Proof" (Experience) → Google Drive (file harus "Anyone with the link"). Link sosial (Contact + JSON-LD `sameAs`) ada di `SOCIAL_LINKS` di `src/lib/site.ts`.
+- Google Search Console: kalau verifikasi pakai meta tag, isi `metadata.verification.google` di `layout.tsx`.
 - Tahap 6 PRD: Lighthouse, uji Safari/iOS, hapus `framer-motion` jika memang tidak dipakai.

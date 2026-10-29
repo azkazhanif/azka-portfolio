@@ -3,20 +3,14 @@ import { Service } from "@/types/Service";
 export const services: Service[] = [
     {
       'id': 1,
-      'title': 'Full-Stack Development',
-      'description': 'Build fast, secure, and scalable websites tailored to your needs—from sleek portfolios to dynamic e-commerce platforms.',
-      'image': '/images/services/fullstack-development.svg',
+      'title': 'Frontend Engineering',
+      'description': 'Build fast, responsive, and accessible web interfaces with React, Next.js, and TypeScript—turning complex workflows into screens your team can use without a manual.',
+      'image': '/images/services/frontend-engineering.svg',
     },
     {
       'id': 2,
-      'title': 'UI/UX Design',
-      'description': 'Create intuitive digital experiences that users love. I design wireframes, prototypes, and pixel-perfect interfaces focused onusability and aesthetics.',
-      'image': '/images/services/ui-ux-design.svg',
-    },
-    {
-      'id': 3,
-      'title': 'Graphic Design',
-      'description': 'Craft memorable visuals for your brand, including logos, social media assets, and marketing materials that stand out.',
-      'image': '/images/services/graphic-design.svg',
+      'title': 'Backend Engineering',
+      'description': 'Design secure REST APIs, optimized SQL databases, and business logic that replace manual spreadsheet recaps with automated, reliable systems that scale with your operations.',
+      'image': '/images/services/backend-engineering.svg',
     },
 ]

@@ -130,9 +130,9 @@ const About = () => {
           <div className="md:col-span-5 relative aspect-[4/5] w-full max-w-md mx-auto md:max-w-none rounded-3xl overflow-hidden bg-mist border border-ocean/10 shadow-md">
             <Image
               ref={imageRef}
-              src="/images/about_parallax.png"
+              src="/images/about.jpeg"
               fill
-              alt="About Parallax Art"
+              alt="Abstract artwork representing Azka Zufar Hanif's approach to full stack web development"
               className="object-cover scale-110 brightness-[0.85] contrast-[1.05]"
               sizes="(max-width: 768px) 100vw, 40vw"
             />
@@ -153,9 +153,9 @@ const About = () => {
 
             <div className="overflow-hidden mb-8">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-ink leading-tight reveal-item">
-                A Tech & <br />
+                From Spreadsheets <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-ink to-ocean">
-                  Design Enthusiast
+                  to Smart Systems
                 </span>
               </h2>
             </div>
@@ -165,90 +165,54 @@ const About = () => {
                 data-scrub-text
                 className="text-base md:text-xl font-medium text-ink/90 leading-relaxed italic reveal-item"
               >
-                &quot;Turning ideas into functional art—where code meets
-                creativity&quot;
+                &quot;I turn manual, error-prone workflows into fast, reliable
+                web systems that teams actually enjoy using.&quot;
               </p>
             </div>
 
             <div className="space-y-4 text-ocean leading-relaxed text-sm md:text-base mb-8">
               <div className="overflow-hidden">
                 <p className="reveal-item">
-                  With{" "}
+                  I&apos;m Azka Zufar Hanif, a{" "}
                   <span className="text-ink font-bold">
-                    2+ years of coding experience
-                  </span>
-                  , I blend technical skills and design thinking to build
-                  impactful digital solutions.
+                    Full Stack Web Developer
+                  </span>{" "}
+                  based in Indonesia with{" "}
+                  <span className="text-ink font-bold">
+                    2+ years of experience
+                  </span>{" "}
+                  building web applications with React, Next.js, TypeScript, and
+                  SQL.
                 </p>
               </div>
               <div className="overflow-hidden">
                 <p className="reveal-item">
-                  My journey includes interning at{" "}
+                  At{" "}
                   <span className="text-ink font-semibold">
-                    PT. Mattel Indonesia
+                    PT Pratama Abadi Industri
                   </span>
-                  , where I developed internal web systems, and leading design
-                  initiatives as Vice Director of Department Communication &
-                  Design at PUMA Computing.
+                  , I build internal systems that support multiple
+                  departments—replacing manual Excel recaps with centralized,
+                  automated web workflows. From material inventory to vendor
+                  management, every feature I ship cuts repetitive work, reduces
+                  data errors, and gives teams real-time data they can trust.
                 </p>
               </div>
               <div className="overflow-hidden">
                 <p className="reveal-item">
-                  Passionate about merging logic with aesthetics, I thrive on
-                  creating intuitive, user-driven experiences—let’s collaborate
-                  and bring ideas to life!
+                  Before that, I developed laboratory web systems as an intern
+                  at{" "}
+                  <span className="text-ink font-semibold">
+                    PT Mattel Indonesia
+                  </span>{" "}
+                  and led the design division at PUMA Computing—so I build with
+                  both clean code and thoughtful UX in mind.
                 </p>
               </div>
-            </div>
-
-            {/* Statistics Section */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-8 w-full border-t border-ocean/10 pt-8 mb-8">
-              <div>
-                <div className="overflow-hidden flex items-baseline">
-                  <span
-                    className="stat-number text-ink font-black text-2xl sm:text-3xl md:text-4xl tracking-tight"
-                    data-target="3"
-                  >
-                    0
-                  </span>
-                  <span className="text-ocean font-black text-xl sm:text-2xl md:text-3xl ml-0.5">
-                    +
-                  </span>
-                </div>
-                <p className="text-ocean/70 text-[10px] tracking-widest uppercase font-mono mt-1">
-                  Years Exp
-                </p>
-              </div>
-              <div>
-                <div className="overflow-hidden flex items-baseline">
-                  <span
-                    className="stat-number text-ink font-black text-2xl sm:text-3xl md:text-4xl tracking-tight"
-                    data-target="20"
-                  >
-                    0
-                  </span>
-                  <span className="text-ocean font-black text-xl sm:text-2xl md:text-3xl ml-0.5">
-                    +
-                  </span>
-                </div>
-                <p className="text-ocean/70 text-[10px] tracking-widest uppercase font-mono mt-1">
-                  Projects
-                </p>
-              </div>
-              <div>
-                <div className="overflow-hidden flex items-baseline">
-                  <span
-                    className="stat-number text-ink font-black text-2xl sm:text-3xl md:text-4xl tracking-tight"
-                    data-target="15"
-                  >
-                    0
-                  </span>
-                  <span className="text-ocean font-black text-xl sm:text-2xl md:text-3xl ml-0.5">
-                    +
-                  </span>
-                </div>
-                <p className="text-ocean/70 text-[10px] tracking-widest uppercase font-mono mt-1">
-                  Clients
+              <div className="overflow-hidden">
+                <p className="reveal-item">
+                  Need a developer who understands the business process, not
+                  just the code? Let&apos;s build something that works.
                 </p>
               </div>
             </div>
@@ -259,8 +223,9 @@ const About = () => {
                 ref={resumeButtonRef}
                 onMouseMove={handleMagneticMove}
                 onMouseLeave={handleMagneticLeave}
-                href="https://drive.google.com/file/..."
+                href="https://drive.google.com/file/d/10PqdBwNSebgPK7tzEu74rhvXSOufLivC/view?usp=sharing"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="reveal-item inline-flex items-center gap-3 px-8 py-3.5 border border-ink/20 rounded-full text-ink bg-transparent hover:bg-ink hover:text-foam hover:border-ink transition-all duration-300 shadow-sm hover:shadow-[0_4px_15px_rgb(var(--shadow)/0.1)]"
               >
                 <span className="text-xs font-bold tracking-widest uppercase">

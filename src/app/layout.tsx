@@ -4,6 +4,7 @@ import "./globals.css";
 import LenisWrapper from "@/components/LenisWrapper";
 import PageTransitionProvider from "@/components/PageTransition";
 import CustomCursor from "@/components/CustomCursor";
+import { CONTACT_EMAIL, SITE_AUTHOR, SITE_BRAND, SITE_DESCRIPTION, SITE_TITLE, SITE_URL, SOCIAL_LINKS } from "@/lib/site";
 
 // Runs before paint so the saved/system theme is applied without a flash
 const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){}})();`;
@@ -15,34 +16,88 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Azka Zufar Hanif | Creative Full Stack Developer & Designer",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_TITLE,
+    template: `%s | ${SITE_AUTHOR} (${SITE_BRAND})`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_BRAND,
   keywords: [
     "Azka Zufar Hanif",
+    "Azka Hanif",
+    "AZH",
+    "azuha",
     "Full Stack Developer",
-    "Designer",
-    "Portfolio",
-    "Web Developer",
-    "UI/UX Designer",
-    "JavaScript",
-    "React",
-    "Next.js",
-    "Node.js",
-    "Tailwind CSS",
-    "TypeScript",
+    "Full Stack Developer Indonesia",
+    "Frontend Engineer",
+    "Backend Engineer",
+    "Web Developer Indonesia",
     "Software Engineer",
-    "Web Design",
-    "Web Development",
-    "GSAP Animation"
+    "React Developer",
+    "Next.js Developer",
+    "Laravel Developer",
+    "TypeScript",
+    "Vue.js",
+    "Node.js",
+    "Supabase",
+    "REST API",
+    "Internal Business Systems",
+    "Portfolio",
   ],
-  authors: [{ name: "Azka Zufar Hanif", url: "https://azka.dev" }],
-  creator: "Azka Zufar Hanif",
+  authors: [{ name: SITE_AUTHOR, url: SITE_URL }],
+  creator: SITE_AUTHOR,
+  publisher: SITE_AUTHOR,
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Azka Zufar Hanif | Creative Full Stack Developer & Designer",
-    description: "Azka Zufar Hanif is a Full Stack Developer and Designer specializing in creating modern web applications.",
-    url: "https://azka.dev",
-    siteName: "Azka Zufar Hanif | Creative Full Stack Developer & Designer",
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: `${SITE_AUTHOR} (${SITE_BRAND})`,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
-  description: "Azka Zufar Hanif is a Full Stack Developer and Designer specializing in creating modern web applications.",
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
+  category: "technology",
+};
+
+// Structured data so search engines can show a rich result for the person and site
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: `${SITE_AUTHOR} (${SITE_BRAND})`,
+      alternateName: SITE_BRAND,
+      inLanguage: "en",
+      publisher: { "@id": `${SITE_URL}/#person` },
+    },
+    {
+      "@type": "Person",
+      "@id": `${SITE_URL}/#person`,
+      name: SITE_AUTHOR,
+      alternateName: ["Azka Hanif", SITE_BRAND],
+      url: SITE_URL,
+      image: `${SITE_URL}/images/profile.png`,
+      email: `mailto:${CONTACT_EMAIL}`,
+      jobTitle: "Full Stack Developer",
+      worksFor: { "@type": "Organization", name: "PT Pratama Abadi Industri" },
+      nationality: { "@type": "Country", name: "Indonesia" },
+      knowsAbout: ["React", "Next.js", "TypeScript", "Laravel", "Vue.js", "Node.js", "SQL", "Supabase", "REST API"],
+      sameAs: SOCIAL_LINKS.map((s) => s.href),
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -64,6 +119,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`${poppins.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <PageTransitionProvider>
           <LenisWrapper>
             <CustomCursor />

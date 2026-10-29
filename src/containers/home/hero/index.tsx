@@ -120,12 +120,12 @@ const Hero = ({ ready = true }: { ready?: boolean }) => {
   };
 
   const titleText = "AZKA HANIF";
-  const subTitleText = "Creative Fullstack Developer & Designer";
+  const subTitleText = "Creative Fullstack Developer";
 
   return (
     <div
       ref={containerRef}
-      className="relative min-h-[100svh] w-full bg-foam overflow-hidden flex flex-col items-center justify-start md:justify-center pt-[20svh] md:pt-0 select-none"
+      className="relative h-[100svh] w-full bg-foam overflow-hidden flex flex-col items-center pt-24 sm:pt-28 lg:pt-0 select-none"
       id="home"
     >
       {/* Mouse Follower Trail (Medium Teal Accent) */}
@@ -134,43 +134,55 @@ const Hero = ({ ready = true }: { ready?: boolean }) => {
         className="absolute w-8 h-8 rounded-full bg-ocean opacity-20 blur-xl pointer-events-none z-0"
       />
 
-      {/* --- BACKGROUND DISPLAY TEXT --- */}
-      <div className="hero-text relative z-20 flex flex-col items-center text-center md:-mt-[24vh] max-w-6xl px-4 md:px-6">
+      {/* --- DISPLAY TEXT: stacked above the portrait below lg; from lg it sits behind the head ---
+          (lg anchor = 74% of the rendered portrait height, i.e. min(86vh, 720px × 1.25)) */}
+      <div className="hero-text relative lg:absolute lg:inset-x-0 lg:bottom-[calc(min(86vh,900px)*0.74)] z-0 flex justify-center px-4 pointer-events-none">
         <div className="overflow-hidden">
           <h1
             ref={mainTitleRef}
-            className="text-[clamp(2.75rem,11vw,10rem)] leading-[0.9] font-black text-ink tracking-[0.04em] uppercase hero-title"
+            className="text-[clamp(2.75rem,13vw,13rem)] leading-[0.9] font-black text-ink tracking-[0.04em] uppercase whitespace-nowrap hero-title"
           >
             {titleText}
           </h1>
         </div>
-
-        <div className="flex flex-wrap justify-center gap-x-2 md:gap-x-3 mt-4 md:mt-6">
-          {subTitleText.split(" ").map((word, idx) => (
-            <div key={idx} className="overflow-hidden py-1">
-              <p className="text-ocean text-[11px] sm:text-sm md:text-base tracking-[0.2em] font-semibold uppercase hero-sub">
-                {word}
-              </p>
-            </div>
-          ))}
-        </div>
-        <div className="h-[0.5px] w-24 bg-ink mt-4 opacity-30" />
       </div>
 
-      {/* --- PROFILE IMAGE SECTION --- */}
-      <div className="hero-image-wrap absolute bottom-0 z-10 w-full max-w-[300px] sm:max-w-[380px] md:max-w-[460px] h-[56svh] md:h-[55vh]">
+      {/* --- SUBTITLE: under the name on small screens, beside the portrait from lg --- */}
+      <div className="hero-text relative w-full mt-3 sm:mt-4 lg:mt-0 lg:absolute lg:inset-x-0 lg:bottom-[34vh] z-20 pointer-events-none">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 flex flex-col items-center lg:items-start">
+          <div className="h-[0.5px] w-16 bg-ink opacity-30 mb-4 hidden lg:block" />
+          <div className="flex flex-wrap justify-center lg:justify-start gap-x-2 md:gap-x-3 lg:max-w-[12rem] xl:max-w-[15rem]">
+            {subTitleText.split(" ").map((word, idx) => (
+              <div key={idx} className="overflow-hidden py-1">
+                <p className="text-ocean text-[11px] sm:text-sm lg:text-base xl:text-lg tracking-[0.2em] font-semibold uppercase hero-sub">
+                  {word}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* --- PROFILE IMAGE SECTION ---
+          Below lg it flows under the text with a minimum width, so on phones it overflows the
+          sides and bottom of the hero (clipped by overflow-hidden) instead of shrinking. */}
+      <div className="hero-image-wrap relative shrink-0 mt-6 sm:mt-8 w-[max(100%,520px)] sm:w-[600px] aspect-[4/5] lg:aspect-auto lg:absolute lg:mt-0 lg:bottom-0 lg:left-1/2 lg:-translate-x-1/2 lg:w-full lg:max-w-[720px] lg:h-[86vh] z-10">
         <div className="hero-image-inner relative w-full h-full">
           <Image
             src="/images/profile.png"
             fill
-            alt="Azka Profile"
-            className="object-contain object-bottom grayscale brightness-[0.8] contrast-[1.1] hover:grayscale-0 hover:brightness-100 transition-all duration-1000"
+            alt="Azka Zufar Hanif, Full Stack Developer"
+            sizes="(max-width: 1023px) 600px, 720px"
+            className="object-contain object-top lg:object-bottom grayscale brightness-[0.8] contrast-[1.1] hover:grayscale-0 hover:brightness-100 transition-all duration-1000"
             priority
           />
           {/* Shadow blend base into seafoam floor */}
-          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-foam to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-foam to-transparent hidden lg:block" />
         </div>
       </div>
+
+      {/* The portrait's own fade is cropped off below lg, so fade the hero's bottom edge instead */}
+      <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-foam to-transparent z-10 pointer-events-none lg:hidden" />
 
       {/* --- ACTION CTA BUTTON --- */}
       <div className="hero-cta-wrap absolute bottom-20 md:bottom-24 z-20">

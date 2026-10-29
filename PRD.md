@@ -1,4 +1,4 @@
-# PRD — Redesign Portfolio azka.dev
+# PRD — Redesign Portfolio AZH (azuha.my.id; dulu azka.dev)
 
 | | |
 |---|---|
@@ -180,7 +180,7 @@ Aturan teknis animasi:
 | # | Topik | Keputusan |
 |---|---|---|
 | 1 | Branding "ANTIGRAVITY" | Di preloader diganti "Welcome" multi-bahasa; di metadata diganti nama pribadi |
-| 2 | Domain | Tetap `https://azka.dev` |
+| 2 | Domain | `https://azuha.my.id` (diganti dari azka.dev) |
 | 3 | Urutan project | 3 project baru paling depan |
 | 4 | Bahasa preloader | Inggris, Italia, Jepang, Korea + Indonesia & Prancis |
 | 5 | Nomor WhatsApp "Let's Talk" | Tetap sama |

@@ -127,9 +127,10 @@ export const Navbar = () => {
           <Link
             href="/"
             onClick={() => setIsMenuOpen(false)}
-            className="text-xl font-black tracking-tighter text-ink uppercase hover:text-ocean transition-colors"
+            aria-label="AZH — Azka Zufar Hanif, home"
+            className="text-xl font-black tracking-tight text-ink uppercase hover:text-ocean transition-colors"
           >
-            azka<span className="text-ocean">.</span>dev
+            AZH
           </Link>
 
           <div className="hidden md:flex items-center gap-8">

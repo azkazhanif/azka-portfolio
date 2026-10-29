@@ -5,6 +5,7 @@ import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
 import type { IconType } from "react-icons";
 import gsap from "gsap";
 import { themeColor } from "@/lib/theme";
+import { SOCIAL_LINKS } from "@/lib/site";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TextPlugin } from "gsap/TextPlugin";
 
@@ -197,16 +198,18 @@ const Contact = () => {
         {/* FOOTER AREA */}
         <div className="mt-20 md:mt-24 flex flex-col md:flex-row justify-between items-center border-t border-ocean/10 pt-12 gap-8 text-center md:text-left">
           <p className="text-ocean/60 font-mono text-xs uppercase tracking-widest">
-            © {new Date().getFullYear()} Azka Zufar Hanif — Built with Passion
+            © {new Date().getFullYear()} AZH — Azka Zufar Hanif. Built with Passion
           </p>
           <div className="flex flex-wrap justify-center gap-6 md:gap-8">
-            {["Instagram", "LinkedIn", "Github"].map((social) => (
+            {SOCIAL_LINKS.map((social) => (
               <a
-                key={social}
-                href="#"
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer me"
                 className="text-xs font-bold text-ocean/55 hover:text-ink transition-colors uppercase tracking-[0.2em] relative"
               >
-                {social}
+                {social.label}
               </a>
             ))}
           </div>

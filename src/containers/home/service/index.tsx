@@ -15,9 +15,7 @@ const skillsData = [
   { name: "Laravel / SQLite / MySQL", percentage: 88 },
   { name: "Node.js / ExpressJS / Postgres", percentage: 85 },
   { name: "ASP.NET / SQL Server", percentage: 80 },
-  { name: "Figma (UI/UX)", percentage: 90 },
-  { name: "Adobe Photoshop / Illustrator", percentage: 85 },
-  { name: "Adobe Premiere Pro / Capcut", percentage: 80 }
+  { name: "Python / Flask", percentage: 80 }
 ];
 
 const Service = () => {
@@ -116,7 +114,7 @@ const Service = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="bg-foam py-20 md:py-28 px-4 md:px-6" id="service">
+    <div ref={containerRef} className="bg-foam pt-20 md:pt-28 pb-10 md:pb-14 px-4 md:px-6" id="service">
       <div className="max-w-6xl mx-auto">
         
         {/* --- SERVICE OFFERINGS --- */}
@@ -152,7 +150,7 @@ const Service = () => {
                     src={data.image}
                     width={110}
                     height={110}
-                    alt={data.title}
+                    alt={`${data.title} illustration`}
                     className="relative z-10 h-16 md:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all duration-500 scale-95 group-hover:scale-100"
                   />
                 </div>
@@ -170,11 +168,11 @@ const Service = () => {
         {/* --- INFINITE MARQUEE TEXT --- */}
         <div 
           ref={marqueeRef}
-          className="w-full overflow-hidden bg-mist py-4 md:py-6 rounded-2xl border border-ocean/10 select-none relative mb-20"
+          className="w-full overflow-hidden bg-mist py-4 md:py-6 rounded-2xl border border-ocean/10 select-none relative"
         >
           <div className="flex flex-row flex-nowrap whitespace-nowrap marquee-track font-black uppercase text-2xl md:text-5xl text-ink tracking-[0.15em]">
-            <span className="px-6">DEVELOPMENT • DESIGN • BRANDING • STRATEGY • INTERACTIVE • ANIMATION • FULLSTACK • </span>
-            <span className="px-6">DEVELOPMENT • DESIGN • BRANDING • STRATEGY • INTERACTIVE • ANIMATION • FULLSTACK • </span>
+            <span className="px-6">FRONTEND • BACKEND • REST API • DATABASE • AUTOMATION • PERFORMANCE • SCALABLE SYSTEMS • </span>
+            <span className="px-6">FRONTEND • BACKEND • REST API • DATABASE • AUTOMATION • PERFORMANCE • SCALABLE SYSTEMS • </span>
           </div>
         </div>
 

@@ -67,7 +67,7 @@ const Tools = () => {
   return (
     <div
       ref={containerRef}
-      className="bg-foam py-20 md:py-28 relative select-none"
+      className="bg-foam pt-10 md:pt-14 pb-20 md:pb-28 relative select-none"
       id="tools"
     >
       <div className="max-w-6xl mx-auto px-4 md:px-6">

@@ -129,8 +129,9 @@ const Experience = () => {
                 PT. Mattel Indonesia — 2025
               </p>
               <a
-                href="https://drive.google.com/..."
+                href="https://drive.google.com/file/d/1oLyw2IwWqgS1TNKNJs9gnf8idPExSuxI/view?usp=sharing"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="text-xs font-bold font-mono text-ink hover:text-ocean uppercase tracking-tighter flex items-center gap-2"
               >
                 View Proof <span className="text-sm">→</span>
@@ -145,8 +146,9 @@ const Experience = () => {
                 Google, GoTo, Traveloka — 2023
               </p>
               <a
-                href="https://drive.google.com/..."
+                href="https://drive.google.com/file/d/1U5sKjEuQWWf5uHl2pEeWso8DdDewdmS8/view?usp=sharing"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="text-xs font-bold font-mono text-ink hover:text-ocean uppercase tracking-tighter flex items-center gap-2"
               >
                 View Proof <span className="text-sm">→</span>
@@ -170,6 +172,14 @@ const Experience = () => {
               <p className="text-xs text-ocean/70 mt-1 font-mono">
                 2021 — 2024
               </p>
+              <a
+                href="https://drive.google.com/file/d/1NhRODsJYoqMyyBpfTUNLbWlQdTJQQPHP/view?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 text-xs font-bold font-mono text-ink hover:text-ocean uppercase tracking-tighter flex items-center gap-2"
+              >
+                View Diploma <span className="text-sm">→</span>
+              </a>
             </div>
 
             <div className="relative pl-8 before:absolute before:left-0 before:top-2 before:w-2 before:h-2 before:bg-ocean/40 before:rounded-full">

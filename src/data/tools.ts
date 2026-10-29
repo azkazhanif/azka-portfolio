@@ -3,7 +3,53 @@ import { Tool } from "@/types/Tool";
 export const tools: Tool[] = [
     {
         id: 1,
-        title: "Web Development",
+        title: "Programming Languages",
+        item: [
+            {
+                id: 1,
+                title: "JavaScript",
+                image: "/images/tools/javascript.png"
+            },
+            {
+                id: 2,
+                title: "TypeScript",
+                image: "/images/tools/typescript.svg"
+            },
+            {
+                id: 3,
+                title: "PHP",
+                image: "/images/tools/php.svg"
+            },
+            {
+                id: 4,
+                title: "Python",
+                image: "/images/tools/python.svg"
+            },
+            {
+                id: 5,
+                title: "C#",
+                image: "/images/tools/csharp.svg"
+            },
+            {
+                id: 6,
+                title: "SQL",
+                image: "/images/tools/sql.svg"
+            },
+            {
+                id: 7,
+                title: "HTML",
+                image: "/images/tools/html.png"
+            },
+            {
+                id: 8,
+                title: "CSS",
+                image: "/images/tools/css.png"
+            }
+        ]
+    },
+    {
+        id: 2,
+        title: "Frameworks & Libraries",
         item: [
             {
                 id: 1,
@@ -27,80 +73,49 @@ export const tools: Tool[] = [
             },
             {
                 id: 5,
+                title: "Vue",
+                image: "/images/tools/vue.svg"
+            },
+            {
+                id: 6,
                 title: "Laravel",
                 image: "/images/tools/laravel.png"
             },
             {
-                id: 6,
+                id: 7,
+                title: "NodeJS",
+                image: "/images/tools/nodejs.png"
+            },
+            {
+                id: 8,
                 title: "ExpressJS",
                 image: "/images/tools/expressjs.png"
             },
             {
-                id: 7,
+                id: 9,
                 title: "ASP.NET",
                 image: "/images/tools/aspnet.png"
             },
             {
-                id: 8,
-                title: "HTML",
-                image: "/images/tools/html.png"
-            },
-            {
-                id: 9,
-                title: "CSS",
-                image: "/images/tools/css.png"
-            },
-            {
                 id: 10,
-                title: "JavaScript",
-                image: "/images/tools/javascript.png"
-            },
-            {
-                id: 11,
-                title: "NodeJS",
-                image: "/images/tools/nodejs.png"
-            }
-        ]
-    },
-    {
-        id: 2,
-        title: "UI/UX Design",
-        item: [
-            {
-                id: 1,
-                title: "Figma",
-                image: "/images/tools/figma.png"
+                title: "Flask",
+                image: "/images/tools/flask.svg"
             }
         ]
     },
     {
         id: 3,
-        title: "Graphic Design & Content Creation",
+        title: "AI Coding Agents",
         item: [
             {
                 id: 1,
-                title: "Canva",
-                image: "/images/tools/canva.jpeg"
+                title: "Claude Code",
+                image: "/images/tools/claude-code.svg"
             },
             {
                 id: 2,
-                title: "Adobe Photoshop",
-                image: "/images/tools/photoshop.png"
-            },
-            {
-                id: 3,
-                title: "Adobe Illustrator",
-                image: "/images/tools/illustrator.png"
-            },
-            {
-                id: 4,
-                title: "Adobe Premiere Pro",
-                image: "/images/tools/premiere-pro.png"
-            },
-            {
-                id: 5,
-                title: "Capcut",
-                image: "/images/tools/capcut.jpg"
+                title: "GitHub Copilot",
+                image: "/images/tools/github-copilot.svg"
             }
         ]
     }
