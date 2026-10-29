@@ -5,5 +5,7 @@ export interface Portfolio {
     slug: string,
     description: string,
     technologies: string[],
-    duration: string
+    duration: string,
+    role?: string,
+    challenge?: string
 }

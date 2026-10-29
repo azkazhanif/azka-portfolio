@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Preloader from "@/components/Preloader";
-import Footer from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import About from "@/containers/home/about";
 import Contact from "@/containers/home/contact";
@@ -11,16 +10,21 @@ import Hero from "@/containers/home/hero";
 import Portfolio from "@/containers/home/portfolio";
 import Service from "@/containers/home/service";
 import Tools from "@/containers/home/tools";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { setScrollLock } from "@/lib/scroll";
+import ScrollEffects from "@/components/ScrollEffects";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
-  // Mencegah scroll saat loading
+  // Prevent scroll during preloading
   useEffect(() => {
     if (isLoading) {
-      document.body.style.overflow = "hidden";
+      setScrollLock(true);
     } else {
-      document.body.style.overflow = "unset";
+      setScrollLock(false);
+      // Recalculate pinned sections now that the scrollbar is back
+      ScrollTrigger.refresh();
     }
   }, [isLoading]);
 
@@ -28,19 +32,39 @@ export default function Home() {
     <>
       {/* Layar Preloader */}
       <Preloader onComplete={() => setIsLoading(false)} />
+      <ScrollEffects enabled={!isLoading} />
 
       {/* Konten Utama */}
       <main
-        className={`relative transition-opacity duration-1000 ${isLoading ? "opacity-0" : "opacity-100"}`}
+        id="main-content"
+        className={`relative ${isLoading ? "opacity-0" : "opacity-100"}`}
       >
         <Navbar />
-        <Hero />
-        <About />
-        <Service />
-        <Tools />
-        <Experience />
-        <Portfolio />
-        <Contact />
+        <Hero ready={!isLoading} />
+        <div>
+          <div className="section-divider" />
+          <About />
+        </div>
+        <div>
+          <div className="section-divider" />
+          <Service />
+        </div>
+        <div>
+          <div className="section-divider" />
+          <Tools />
+        </div>
+        <div>
+          <div className="section-divider" />
+          <Experience />
+        </div>
+        <div>
+          <div className="section-divider" />
+          <Portfolio />
+        </div>
+        <div>
+          <div className="section-divider" />
+          <Contact />
+        </div>
       </main>
     </>
   );

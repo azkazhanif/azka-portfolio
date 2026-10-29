@@ -1,108 +1,193 @@
 "use client";
+
 import Image from "next/image";
-import React, { useRef } from "react";
-import { motion, useTransform, useMotionValue, useSpring } from "framer-motion";
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { themeColor } from "@/lib/theme";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 
-const Hero = () => {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-    mouseX.set(clientX / innerWidth - 0.5);
-    mouseY.set(clientY / innerHeight - 0.5);
+const Hero = ({ ready = true }: { ready?: boolean }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const trailRef = useRef<HTMLDivElement>(null);
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const mainTitleRef = useRef<HTMLHeadingElement>(null);
+  const ctaRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const trail = trailRef.current;
+    const scrollIndicator = scrollIndicatorRef.current;
+
+    if (!container) return;
+
+    // 1. Cursor Trail follow logic (Medium teal, trailing mouse with GSAP quickTo)
+    if (trail) {
+      gsap.set(trail, { xPercent: -50, yPercent: -50, x: -100, y: -100 });
+      const xTo = gsap.quickTo(trail, "x", { duration: 0.7, ease: "power3.out" });
+      const yTo = gsap.quickTo(trail, "y", { duration: 0.7, ease: "power3.out" });
+
+      const handleMouseMove = (e: MouseEvent) => {
+        const rect = container.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        xTo(mouseX);
+        yTo(mouseY);
+      };
+
+      container.addEventListener("mousemove", handleMouseMove);
+
+      return () => {
+        container.removeEventListener("mousemove", handleMouseMove);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const mm = gsap.matchMedia(container);
+
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      const split = SplitText.create(".hero-title", { type: "chars" });
+
+      // 2. Hold everything hidden until the preloader hands over
+      gsap.set(split.chars, { yPercent: 110 });
+      gsap.set(".hero-sub", { yPercent: 110 });
+      gsap.set(".hero-image-wrap", { clipPath: "inset(100% 0% 0% 0%)" });
+      gsap.set(".hero-cta-wrap", { opacity: 0, y: 30 });
+
+      if (!ready) return () => split.revert();
+
+      gsap
+        .timeline({ delay: 0.15 })
+        .to(split.chars, { yPercent: 0, duration: 1.1, stagger: 0.04, ease: "power4.out" })
+        .to(".hero-sub", { yPercent: 0, duration: 0.8, stagger: 0.05, ease: "power3.out" }, "-=0.8")
+        .to(".hero-image-wrap", { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: "power4.inOut" }, "-=1.0")
+        .to(".hero-cta-wrap", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.6");
+
+      // 3. Scroll parallax: headline drifts up and fades, portrait sinks slower than the page
+      const scrub = { trigger: container, start: "top top", end: "bottom top", scrub: true };
+      gsap.to(".hero-text", { yPercent: -40, opacity: 0, ease: "none", scrollTrigger: scrub });
+      gsap.to(".hero-image-inner", { yPercent: 12, ease: "none", scrollTrigger: { ...scrub } });
+
+      // 4. Scroll indicator looping bounce
+      gsap.to(".hero-scroll-indicator", { y: 12, duration: 1.0, repeat: -1, yoyo: true, ease: "power1.inOut" });
+
+      return () => split.revert();
+    });
+
+    return () => mm.revert();
+  }, [ready]);
+
+  // 5. CTA Magnetic Button interaction (Ocean Calm Theme: deep teal background, seafoam text)
+  const handleMagneticMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const btn = ctaRef.current;
+    if (!btn) return;
+
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+
+    gsap.to(btn, {
+      x: x * 0.35,
+      y: y * 0.35,
+      scale: 1.02,
+      backgroundColor: themeColor("ocean"),
+      boxShadow: `0 10px 25px ${themeColor("shadow", 0.25)}`,
+      duration: 0.3,
+      ease: "power2.out",
+    });
   };
 
-  const springConfig = { stiffness: 100, damping: 30 };
-  const x = useSpring(mouseX, springConfig);
-  const y = useSpring(mouseY, springConfig);
+  const handleMagneticLeave = () => {
+    const btn = ctaRef.current;
+    if (!btn) return;
 
-  // Layer 1: Text (Deep Background) - Bergerak searah kursor
-  const textX = useTransform(x, [-0.5, 0.5], ["-20px", "20px"]);
-  const textY = useTransform(y, [-0.5, 0.5], ["-10px", "10px"]);
+    gsap.to(btn, {
+      x: 0,
+      y: 0,
+      scale: 1.0,
+      backgroundColor: themeColor("ink"),
+      boxShadow: "none",
+      clearProps: "backgroundColor,boxShadow",
+      duration: 0.5,
+      ease: "power3.out",
+    });
+  };
 
-  // Layer 2: Image (Middle) - Bergerak berlawanan (Reverse)
-  const imgX = useTransform(x, [-0.5, 0.5], ["30px", "-30px"]);
-
-  // Layer 3: Button (Front) - Bergerak lebih agresif
-  const btnX = useTransform(x, [-0.5, 0.5], ["50px", "-50px"]);
+  const titleText = "AZKA HANIF";
+  const subTitleText = "Creative Fullstack Developer & Designer";
 
   return (
     <div
-      onMouseMove={handleMouseMove}
-      className="relative h-screen w-full bg-[#050505] overflow-hidden flex flex-col items-center"
+      ref={containerRef}
+      className="relative min-h-[100svh] w-full bg-foam overflow-hidden flex flex-col items-center justify-start md:justify-center pt-[20svh] md:pt-0 select-none"
       id="home"
     >
-      {/* --- LAYER 1: THE TEXTS (BACK) --- */}
-      <motion.div
-        style={{ x: textX, y: textY }}
-        className="relative z-0 mt-[10vh] flex flex-col items-center select-none pointer-events-none"
-      >
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.15, scale: 1 }}
-          transition={{ duration: 1.2, ease: "circOut" }}
-          className="text-[28vw] leading-[0.8] font-bold text-white uppercase tracking-tighter"
-          style={{ fontFamily: "var(--font-anton), sans-serif" }}
-        >
-          AZKA
-        </motion.h1>
+      {/* Mouse Follower Trail (Medium Teal Accent) */}
+      <div
+        ref={trailRef}
+        className="absolute w-8 h-8 rounded-full bg-ocean opacity-20 blur-xl pointer-events-none z-0"
+      />
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 0.6, y: 0 }}
-          transition={{ delay: 0.8, duration: 1 }}
-          className="flex flex-col items-center mt-4"
-        >
-          <p className="text-white text-sm md:text-xl tracking-[0.5em] font-light uppercase">
-            Fullstack Developer
-          </p>
-          <div className="h-[1px] w-12 bg-blue-600 mt-2" />
-          <p className="text-white/40 text-[10px] md:text-xs tracking-[0.3em] mt-2 uppercase">
-            & UI Designer
-          </p>
-        </motion.div>
-      </motion.div>
+      {/* --- BACKGROUND DISPLAY TEXT --- */}
+      <div className="hero-text relative z-20 flex flex-col items-center text-center md:-mt-[24vh] max-w-6xl px-4 md:px-6">
+        <div className="overflow-hidden">
+          <h1
+            ref={mainTitleRef}
+            className="text-[clamp(2.75rem,11vw,10rem)] leading-[0.9] font-black text-ink tracking-[0.04em] uppercase hero-title"
+          >
+            {titleText}
+          </h1>
+        </div>
 
-      {/* --- LAYER 2: IMAGE (MIDDLE) --- */}
-      <motion.div
-        style={{ x: imgX }}
-        initial={{ y: 200, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-        className="absolute bottom-0 z-10 w-full max-w-[400px] md:max-w-[600px] h-[60vh] md:h-[80vh]"
-      >
-        <Image
-          src="/images/profile.png"
-          fill
-          alt="Azka Profile"
-          className="object-contain object-bottom grayscale brightness-75 contrast-125 hover:grayscale-0 hover:brightness-100 transition-all duration-1000"
-          priority
-        />
-        {/* Shadow blend agar kaki gambar menyatu dengan gelapnya floor */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
-      </motion.div>
+        <div className="flex flex-wrap justify-center gap-x-2 md:gap-x-3 mt-4 md:mt-6">
+          {subTitleText.split(" ").map((word, idx) => (
+            <div key={idx} className="overflow-hidden py-1">
+              <p className="text-ocean text-[11px] sm:text-sm md:text-base tracking-[0.2em] font-semibold uppercase hero-sub">
+                {word}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="h-[0.5px] w-24 bg-ink mt-4 opacity-30" />
+      </div>
 
-      {/* --- LAYER 3: BUTTON (FRONT) --- */}
-      <motion.div
-        style={{ x: btnX }}
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-12 md:bottom-20 z-20"
-      >
+      {/* --- PROFILE IMAGE SECTION --- */}
+      <div className="hero-image-wrap absolute bottom-0 z-10 w-full max-w-[300px] sm:max-w-[380px] md:max-w-[460px] h-[56svh] md:h-[55vh]">
+        <div className="hero-image-inner relative w-full h-full">
+          <Image
+            src="/images/profile.png"
+            fill
+            alt="Azka Profile"
+            className="object-contain object-bottom grayscale brightness-[0.8] contrast-[1.1] hover:grayscale-0 hover:brightness-100 transition-all duration-1000"
+            priority
+          />
+          {/* Shadow blend base into seafoam floor */}
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-foam to-transparent" />
+        </div>
+      </div>
+
+      {/* --- ACTION CTA BUTTON --- */}
+      <div className="hero-cta-wrap absolute bottom-20 md:bottom-24 z-20">
         <a
+          ref={ctaRef}
           href="#contact"
-          className="group relative flex items-center gap-4 px-10 py-4 bg-white rounded-full overflow-hidden transition-all duration-300 hover:pr-12"
+          onMouseMove={handleMagneticMove}
+          onMouseLeave={handleMagneticLeave}
+          className="group relative flex items-center gap-3 md:gap-4 px-7 md:px-10 py-3.5 md:py-4 bg-ink rounded-full overflow-hidden transition-shadow duration-300 shadow-[0_4px_15px_rgb(var(--shadow)/0.15)] hover:shadow-[0_0_30px_rgb(var(--ocean)/0.3)]"
         >
-          <span className="relative z-10 text-black font-black text-xs md:text-sm tracking-widest">
-            COLLABORATION NOW
+          <span className="relative z-10 text-foam font-extrabold text-xs md:text-sm tracking-[0.15em] transition-colors duration-300 group-hover:text-foam">
+            COLLABORATE NOW
           </span>
-          <div className="absolute inset-0 bg-blue-600 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+          <div className="absolute inset-0 bg-ocean translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out" />
           {/* Arrow Icon */}
           <svg
-            className="relative z-10 w-4 h-4 text-black group-hover:text-white transition-colors"
+            className="relative z-10 w-4 h-4 text-foam group-hover:text-foam transition-colors duration-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -110,15 +195,23 @@ const Hero = () => {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
+              strokeWidth={2.5}
               d="M14 5l7 7m0 0l-7 7m7-7H3"
             />
           </svg>
         </a>
-      </motion.div>
+      </div>
 
-      {/* Efek Grain untuk mood profesional */}
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none mix-blend-overlay bg-white bg-[url('https://res.cloudinary.com/dvhnd9r37/image/upload/v1614713437/noise_vgllf0.png')]" />
+      {/* --- SCROLL INDICATOR --- */}
+      <div
+        ref={scrollIndicatorRef}
+        className="hero-scroll-indicator absolute bottom-6 z-20 flex flex-col items-center gap-2 pointer-events-none opacity-50"
+      >
+        <span className="text-[9px] font-bold tracking-[0.3em] text-ocean uppercase">SCROLL</span>
+        <div className="w-5 h-8 border border-ocean rounded-full flex justify-center p-1">
+          <div className="w-1.5 h-1.5 bg-ocean rounded-full" />
+        </div>
+      </div>
     </div>
   );
 };

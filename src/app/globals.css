@@ -1,34 +1,119 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Ocean Calm design tokens (RGB tuples so JS & arbitrary values can apply alpha) */
+:root {
+  --ink: 27 94 82;        /* rgb(var(--ink)) deep ocean teal */
+  --ocean: 46 139 119;    /* rgb(var(--ocean)) medium teal */
+  --foam: 232 244 240;    /* rgb(var(--foam)) seafoam muda */
+  --mist: 208 237 230;    /* #D0EDE6 */
+  --shell: 178 224 213;   /* #B2E0D5 */
+  --accent: 91 191 170;   /* #5BBFAA */
+  --sand: 232 220 202;    /* #E8DCCA */
+  --shadow: 27 94 82;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --ink: 232 244 240;
+  --ocean: 143 211 195;
+  --foam: 14 31 28;
+  --mist: 22 48 43;
+  --shell: 36 70 63;
+  --accent: 91 191 170;
+  --sand: 30 42 38;
+  --shadow: 0 0 0;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-ink: rgb(var(--ink));
+  --color-ocean: rgb(var(--ocean));
+  --color-foam: rgb(var(--foam));
+  --color-mist: rgb(var(--mist));
+  --color-shell: rgb(var(--shell));
+  --color-accent: rgb(var(--accent));
+  --color-sand: rgb(var(--sand));
+}
+
 @layer base {
-  /* 1. Kunci background body ke Hitam agar tidak ada flash putih */
+  html {
+    background-color: rgb(var(--foam)); /* seafoam muda */
+    scroll-behavior: auto !important; /* Lenis handles smooth scrolling */
+    overflow-x: clip;
+    scrollbar-gutter: stable; /* keeps layout width identical while the preloader locks scrolling */
+  }
+
+  html[data-scroll-locked] {
+    overflow: hidden;
+  }
+
+  /* Paint the reserved scrollbar gutter to match the preloader curtain */
+  html:has(.preloader-active) {
+    background-color: rgb(var(--ink));
+  }
+  html[data-theme="dark"]:has(.preloader-active) {
+    background-color: rgb(var(--mist));
+  }
+
   body {
-    @apply bg-[#050505] text-white;
-    background-color: #050505; /* Fallback murni */
+    background-color: rgb(var(--foam));
+    transition: background-color 0.3s ease, color 0.3s ease;
+    color: rgb(var(--ocean)); /* medium teal */
+    font-family: var(--font-poppins), "Noto Sans JP", "Noto Sans KR", sans-serif;
+    font-weight: 400; /* Regular body weight */
+    overflow-x: clip;
   }
 
-  /* 2. Sesuaikan warna teks h1 agar kontras di dark mode */
-  h1 {
-    @apply text-2xl md:text-4xl font-bold text-white tracking-tighter;
+  /* Premium Display Headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-poppins), "Noto Sans JP", "Noto Sans KR", sans-serif;
+    font-weight: 800; /* Extra bold/Display weight */
+    letter-spacing: 0.08em; /* Premium extended spacing */
+    color: rgb(var(--ink)); /* deep ocean teal */
+    text-transform: uppercase;
   }
 
-  /* 3. Sesuaikan warna teks p agar tidak terlalu gelap di background hitam */
   p {
-    @apply text-gray-400 text-sm md:text-base leading-relaxed;
+    color: rgb(var(--ocean)); /* medium teal */
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  /* Custom selection color */
+  ::selection {
+    background-color: rgb(var(--ink)); /* deep ocean teal */
+    color: rgb(var(--foam)); /* seafoam light text */
   }
 }
 
-@layer components {
-  /* 4. Update button agar lebih 'glow' dan modern */
-  .button {
-    @apply inline-flex items-center justify-center text-sm md:text-base 
-           bg-blue-600 text-white px-6 py-3 rounded-full 
-           font-bold tracking-widest transition-all duration-300 
-           hover:bg-blue-500 hover:shadow-[0_0_20px_rgba(37,99,235,0.5)];
+/* Hide default cursor on desktop devices with hover support */
+@media (hover: hover) and (pointer: fine) {
+  html, body, a, button, input, textarea, select, [role="button"] {
+    cursor: none !important;
   }
 }
 
-/* 5. Hilangkan scrollbar saat loading (opsional tapi disarankan) */
-.no-scroll {
-  overflow: hidden;
+/* Noise overlay utility */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03; /* Strict 0.03 opacity */
+  mix-blend-mode: overlay;
+  z-index: 1;
+}
+
+/* GPU Acceleration utility */
+.gpu-accelerated {
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Horizontal line utility (Ocean calm style: thin line at 0.1 deep teal opacity) */
+.section-divider {
+  height: 0.5px;
+  background-color: rgb(var(--ink) / 0.1);
+  width: 100%;
 }

@@ -1,6 +1,38 @@
 import { Portfolio } from "@/types/Portfolio";
 
 export const portfolios: Portfolio[] = [
+  // TODO: isi image & duration untuk 3 project baru di bawah.
+  // Selama image masih "", kartu & halaman detail menampilkan placeholder.
+  {
+    id: 7,
+    title: "Room Booking System",
+    slug: "room-booking-system",
+    description: "A web-based room booking application built for the office using Laravel for the backend and Vue.js for the frontend. Previously, employees who wanted to reserve a meeting room had to go through an admin first just to find out which rooms were free, which slowed down even the simplest booking. Room Booking System removes that bottleneck: anyone in the office can now see room availability directly and book a room on their own, as long as it is still available for the chosen time. Built around a clear, self-service flow, the system cuts out the back-and-forth with admins, prevents double bookings, and makes scheduling meetings faster and more transparent for everyone.",
+    image: "", // contoh: "/images/portfolio/RoomBooking.png"
+    technologies: ["Laravel", "Vue.js"],
+    duration: "",
+    challenge: "Replacing an admin-dependent booking process with a self-service flow where anyone can book a room directly, as long as it is still available.",
+  },
+  {
+    id: 8,
+    title: "FraudLens",
+    slug: "fraudlens",
+    description: "A web platform for early fraud detection, built as our team's entry for the PIDI Hackathon. FraudLens aims to surface suspicious activity as early as possible so it can be reviewed before it turns into real losses. In this project I was responsible for the frontend, which I developed with ReactJS: building the interface that presents the detection results and handling the connectivity between the frontend and the backend services, so the data and analysis produced by the backend reach users in a clear, usable way. Working within the tight timeline of a hackathon, the focus was on delivering a reliable integration and a clean interface that makes the fraud signals easy to understand at a glance.",
+    image: "", // contoh: "/images/portfolio/FraudLens.png"
+    technologies: ["ReactJS"],
+    role: "Frontend Developer",
+    challenge: "Connecting the frontend to the backend reliably and presenting fraud signals clearly, all within the tight timeline of the PIDI Hackathon.",
+    duration: "",
+  },
+  {
+    id: 9,
+    title: "Saldoin",
+    slug: "saldoin",
+    description: "A personal finance management application built with Next.js. Saldoin helps users keep track of their money in one place, recording where it comes from and where it goes, so they can understand their spending habits and stay in control of their personal finances. The app is designed to make everyday money management simple and approachable, turning scattered transactions into a clear picture of one's financial condition.",
+    image: "", // contoh: "/images/portfolio/Saldoin.png"
+    technologies: ["NextJS"],
+    duration: "",
+  },
   {
     id: 1,
     title: "Haniza Store",

@@ -3,156 +3,173 @@
 import { portfolios } from "@/data/portfolio";
 import { Portfolio } from "@/types/Portfolio";
 import Image from "next/image";
-import Footer from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
-import { use } from "react";
-import { motion } from "framer-motion";
+import { use, useEffect, useRef } from "react";
+import gsap from "gsap";
+import Link from "next/link";
+import ProjectPlaceholder from "@/components/ProjectPlaceholder";
 
 type tParams = Promise<{ slug: string }>;
 
 const PortfolioDetail = ({ params }: { params: tParams }) => {
   const { slug }: { slug: string } = use(params);
-
   const data: Portfolio | undefined = portfolios.find((p) => p.slug === slug);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const runReveal = () => {
+      // Stagger reveal project detail contents from top to bottom
+      gsap.fromTo(
+        ".detail-reveal-item",
+        { 
+          y: -40, 
+          opacity: 0 
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.0,
+          stagger: 0.08,
+          ease: "power3.out",
+          overwrite: "auto"
+        }
+      );
+    };
+
+    // Listen to custom pageTransitionComplete event
+    window.addEventListener("pageTransitionComplete", runReveal);
+
+    // Fallback trigger (0.5s after mounting) to guarantee execution
+    const fallbackTimer = setTimeout(runReveal, 550);
+
+    return () => {
+      window.removeEventListener("pageTransitionComplete", runReveal);
+      clearTimeout(fallbackTimer);
+    };
+  }, []);
 
   if (!data)
     return (
-      <div className="h-screen flex items-center justify-center bg-[#050505] text-white">
-        <p className="font-mono tracking-widest uppercase">Project Not Found</p>
+      <div className="h-screen flex items-center justify-center bg-foam text-ink">
+        <p className="font-mono tracking-widest uppercase text-xs font-bold">Project Not Found</p>
       </div>
     );
 
-  // Animation Variants
-  const slideUp = {
-    hidden: { y: 100, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
-    },
-  };
-
-  const staggerContainer = {
-    visible: { transition: { staggerChildren: 0.1 } },
-  };
-
   return (
-    <div className="bg-[#050505] min-h-screen text-white">
+    <div ref={containerRef} className="bg-foam min-h-screen text-ocean select-none">
       <Navbar />
 
-      <main className="max-w-6xl mx-auto pt-32 pb-24 px-6">
+      <main className="max-w-6xl mx-auto pt-28 md:pt-36 pb-20 md:pb-24 px-4 md:px-6">
+        
         {/* --- HEADER SECTION --- */}
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="mb-16"
-        >
-          <div className="overflow-hidden">
-            <motion.p
-              variants={slideUp}
-              className="text-blue-500 font-mono tracking-[0.4em] uppercase text-xs md:text-sm mb-4"
-            >
-              Project Case Study / {data.duration}
-            </motion.p>
+        <div className="mb-10 md:mb-16">
+          <div className="overflow-hidden mb-4">
+            <p className="text-ink font-mono tracking-[0.2em] md:tracking-[0.4em] uppercase text-xs md:text-sm detail-reveal-item">
+              Project Case Study{data.duration && ` / ${data.duration}`}
+            </p>
           </div>
 
-          <div className="overflow-hidden">
-            <motion.h1
-              variants={slideUp}
-              className="text-5xl md:text-8xl font-bold tracking-tighter leading-none mb-8"
-            >
+          <div className="overflow-hidden mb-8">
+            <h1 className="text-3xl sm:text-4xl md:text-7xl font-black tracking-tight leading-none uppercase text-ink detail-reveal-item">
               {data.title}
-            </motion.h1>
+            </h1>
           </div>
 
-          <motion.div
-            variants={slideUp}
-            className="flex gap-3 flex-wrap items-center"
-          >
-            <span className="text-gray-500 font-mono text-xs uppercase mr-2">
+          {data.technologies.length > 0 && (
+          <div className="flex gap-3 flex-wrap items-center detail-reveal-item">
+            <span className="text-ocean/70 font-mono text-[10px] uppercase tracking-widest mr-2">
               Technologies:
             </span>
             {data.technologies.map((tech) => (
               <span
                 key={tech}
-                className="bg-white/5 border border-white/10 rounded-full py-1.5 px-4 text-xs font-medium text-gray-300 backdrop-blur-sm"
+                className="bg-mist border border-ocean/10 rounded-full py-1.5 px-4 text-xs font-semibold text-ink backdrop-blur-sm shadow-sm"
               >
                 {tech}
               </span>
             ))}
-          </motion.div>
-        </motion.div>
+          </div>
+          )}
+        </div>
 
         {/* --- HERO IMAGE SECTION --- */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="relative w-full aspect-video rounded-[2rem] overflow-hidden border border-white/5 mb-20 group"
-        >
-          <Image
-            src={data.image}
-            alt={data.title}
-            fill
-            className="object-cover transition-transform duration-1000 group-hover:scale-105"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/40 to-transparent" />
-        </motion.div>
+        <div className="relative w-full aspect-video rounded-[2rem] overflow-hidden border border-ocean/10 mb-12 md:mb-20 group detail-reveal-item">
+          {data.image ? (
+            <Image
+              src={data.image}
+              alt={data.title}
+              fill
+              className="object-cover transition-transform duration-1000 group-hover:scale-102"
+              priority
+              sizes="100vw"
+            />
+          ) : (
+            <ProjectPlaceholder title={data.title} />
+          )}
+          {/* Subtle gradient overlay to match seafoam background */}
+          <div className="absolute inset-0 bg-gradient-to-t from-foam/40 to-transparent" />
+        </div>
 
         {/* --- CONTENT SECTION --- */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
           {/* Sidebar Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
-            className="md:col-span-4 space-y-8"
-          >
+          <div className="md:col-span-4 space-y-8 detail-reveal-item">
             <div>
-              <h4 className="text-xs font-mono uppercase tracking-widest text-blue-500 mb-2">
+              <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-ink mb-2">
                 Role
               </h4>
-              <p className="text-lg text-white">Lead Fullstack Designer</p>
+              <p className="text-lg text-ink font-bold uppercase tracking-wide">{data.role ?? "Lead Fullstack Developer"}</p>
             </div>
             <div>
-              <h4 className="text-xs font-mono uppercase tracking-widest text-blue-500 mb-2">
+              <h4 className="text-xs font-mono uppercase tracking-[0.2em] text-ink mb-2">
                 Year
               </h4>
-              <p className="text-lg text-white">{data.duration}</p>
+              <p className="text-lg text-ocean font-mono">{data.duration || "Coming soon"}</p>
             </div>
-            <div className="pt-8 border-t border-white/5">
-              <button className="w-full py-4 bg-white text-black font-bold rounded-2xl hover:bg-blue-600 hover:text-white transition-all duration-300">
+            <div className="pt-8 border-t border-ocean/10">
+              <a
+                href="https://github.com"
+                target="_blank"
+                className="block w-full py-4 bg-ink text-foam font-extrabold text-xs tracking-widest text-center rounded-2xl hover:bg-ocean hover:text-foam transition-all duration-300 shadow-sm hover:shadow-[0_4px_15px_rgb(var(--shadow)/0.2)]"
+              >
                 LIVE PREVIEW ↗
-              </button>
+              </a>
             </div>
-          </motion.div>
+          </div>
 
           {/* Detailed Description */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="md:col-span-8"
-          >
-            <h3 className="text-2xl font-bold mb-6 text-white">Overview</h3>
-            <p className="text-gray-400 text-lg leading-relaxed mb-8 first-letter:text-5xl first-letter:font-bold first-letter:mr-3 first-letter:float-left first-letter:text-white">
-              {data.description}
-            </p>
+          <div className="md:col-span-8 space-y-8 detail-reveal-item">
+            <div>
+              <h3 className="text-2xl font-black mb-6 text-ink uppercase tracking-tight">Overview</h3>
+              {data.description ? (
+                <p className="text-ocean text-sm md:text-base leading-relaxed mb-8 first-letter:text-5xl first-letter:font-black first-letter:mr-3 first-letter:float-left first-letter:text-ink">
+                  {data.description}
+                </p>
+              ) : (
+                <p className="text-ocean/70 text-sm md:text-base font-mono uppercase tracking-widest mb-8">Coming soon</p>
+              )}
+            </div>
 
-            {/* Project Goal Mockup Section */}
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10 mt-12">
-              <h4 className="text-blue-400 font-mono text-sm mb-4 uppercase tracking-widest">
+            {/* Project Challenge Box */}
+            <div className="bg-mist p-8 rounded-3xl border border-ocean/10 mt-12 relative overflow-hidden shadow-sm">
+                <h4 className="text-ink font-mono text-xs mb-4 uppercase tracking-widest relative z-10">
                 The Challenge
               </h4>
-              <p className="text-gray-300 italic">
-                Focusing on user-centric design while maintaining
-                high-performance code architecture to deliver a seamless digital
-                experience.
+              <p className="text-ocean italic text-sm leading-relaxed relative z-10">
+                {data.challenge ??
+                  "Focusing on user-centric design while maintaining high-performance code architecture to deliver a seamless digital experience."}
               </p>
             </div>
-          </motion.div>
+            
+            <div className="pt-12">
+              <Link
+                href="/"
+                className="text-xs font-bold text-ocean/70 hover:text-ink uppercase tracking-widest transition-colors inline-flex items-center gap-2"
+              >
+                ← Back to Home
+              </Link>
+            </div>
+          </div>
         </div>
       </main>
     </div>

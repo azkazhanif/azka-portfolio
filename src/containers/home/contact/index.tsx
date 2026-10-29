@@ -1,143 +1,217 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { FaWhatsapp, FaEnvelope } from "react-icons/fa"; // Pastikan install react-icons
+import React, { useEffect, useRef } from "react";
+import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
+import type { IconType } from "react-icons";
+import gsap from "gsap";
+import { themeColor } from "@/lib/theme";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { TextPlugin } from "gsap/TextPlugin";
 
-const ContactCard = ({ href, icon: Icon, title, label, color }: any) => {
-  const ref = useRef<HTMLAnchorElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
+interface ContactCardProps {
+  href: string;
+  icon: IconType;
+  title: string;
+  label: string;
+}
 
-  // REVERSE MOVE: Teks bergerak berlawanan dengan kursor
-  const textX = useTransform(mouseXSpring, [-0.5, 0.5], ["20px", "-20px"]);
-  const textY = useTransform(mouseYSpring, [-0.5, 0.5], ["10px", "-10px"]);
+const ContactCard = ({ href, icon: Icon, title, label }: ContactCardProps) => {
+  const cardRef = useRef<HTMLAnchorElement>(null);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+  // Magnetic Button effect (moves ±20px)
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
 
-    x.set(mouseX / width - 0.5);
-    y.set(mouseY / height - 0.5);
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+
+    gsap.to(card, {
+      x: x * 0.3,
+      y: y * 0.3,
+      scale: 1.01,
+      borderColor: themeColor("ink"),
+      boxShadow: `0 15px 35px ${themeColor("shadow", 0.12)}`,
+      duration: 0.3,
+      ease: "power2.out",
+    });
   };
 
   const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
+    const card = cardRef.current;
+    if (!card) return;
+
+    gsap.to(card, {
+      x: 0,
+      y: 0,
+      scale: 1.0,
+      borderColor: themeColor("ocean", 0.1),
+      boxShadow: "none",
+      clearProps: "borderColor,boxShadow",
+      duration: 0.5,
+      ease: "power3.out",
+    });
   };
 
   return (
-    <motion.a
-      ref={ref}
+    <a
+      ref={cardRef}
       href={href}
       target="_blank"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.02 }}
-      className="group relative w-full flex items-center justify-between p-8 rounded-3xl bg-white/[0.02] border border-white/5 overflow-hidden transition-all duration-500 hover:border-white/20"
+      className="group relative w-full flex items-center justify-between p-5 md:p-8 rounded-3xl bg-mist border border-ocean/10 overflow-hidden transition-all duration-300 select-none shadow-sm"
     >
-      {/* GLOW EFFECT */}
-      <div
-        className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-3xl pointer-events-none`}
-        style={{ backgroundColor: color }}
-      />
+      {/* Ocean Teal Glow */}
+      <div className="absolute inset-0 bg-ocean/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-      <motion.div
-        style={{ x: textX, y: textY }}
-        className="relative z-10 flex items-center gap-6"
-      >
-        <div className="p-4 rounded-2xl bg-white/5 text-3xl group-hover:scale-110 transition-transform duration-500">
-          <Icon style={{ color: color }} />
+      <div className="relative z-10 flex items-center gap-4 md:gap-6">
+        <div className="p-3 md:p-4 rounded-2xl bg-foam text-2xl md:text-3xl text-ink group-hover:scale-110 transition-transform duration-500 shadow-inner">
+          <Icon />
         </div>
         <div>
-          <h3 className="text-gray-500 font-mono text-[10px] uppercase tracking-[0.3em] mb-1">
+          <h3 className="text-ocean/70 font-mono text-[10px] uppercase tracking-[0.3em] mb-1">
             {title}
           </h3>
-          <p className="text-xl md:text-3xl font-bold text-white tracking-tighter">
+          <p className="text-lg md:text-3xl font-extrabold text-ink tracking-tight uppercase">
             {label}
           </p>
         </div>
-      </motion.div>
+      </div>
 
       <div className="relative z-10 hidden md:block">
-        <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500">
-          <span className="text-xl">↗</span>
+        <div className="w-12 h-12 rounded-full border border-ocean/10 flex items-center justify-center group-hover:bg-ink group-hover:border-ink group-hover:text-foam transition-all duration-500">
+          <span className="text-ink group-hover:text-foam text-xl">↗</span>
         </div>
       </div>
-    </motion.a>
+    </a>
   );
 };
 
 const Contact = () => {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const emailStr = "creativewithazka@gmail.com";
+
+  useEffect(() => {
+    // 1. Typewriter reveal for the heading
+    if (headingRef.current) {
+      gsap.fromTo(
+        headingRef.current,
+        { text: "" },
+        {
+          text: "READY TO COLLABORATE?",
+          duration: 1.8,
+          ease: "none",
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: "top 85%",
+            once: true,
+          },
+        }
+      );
+    }
+  }, []);
+
+  // 2. Character hover scale handlers
+  const handleCharEnter = (e: React.MouseEvent<HTMLSpanElement>) => {
+    gsap.to(e.currentTarget, {
+      scale: 1.35,
+      y: -5,
+      color: themeColor("ink"),
+      duration: 0.25,
+      ease: "power2.out",
+    });
+  };
+
+  const handleCharLeave = (e: React.MouseEvent<HTMLSpanElement>) => {
+    gsap.to(e.currentTarget, {
+      scale: 1.0,
+      y: 0,
+      color: themeColor("ocean"),
+      duration: 0.4,
+      clearProps: "color",
+      ease: "power3.out",
+    });
+  };
+
   return (
-    <div className="bg-[#050505] py-32" id="contact">
-      <div className="max-w-5xl mx-auto px-6">
-        <div className="mb-16 text-center md:text-left">
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-blue-500 font-mono tracking-[0.3em] uppercase text-sm mb-4"
-          >
+    <div className="bg-foam py-20 md:py-28 relative overflow-hidden" id="contact">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        
+        {/* HEADER SECTION */}
+        <div className="mb-10 md:mb-16 text-center md:text-left">
+          <p className="text-ink font-mono tracking-[0.3em] uppercase text-xs mb-4">
             05. Contact
-          </motion.p>
-          <motion.h2
-            initial={{ y: 20, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            className="text-4xl md:text-7xl font-bold text-white tracking-tighter"
-          >
-            Ready to{" "}
-            <span className="italic font-light text-gray-500">
-              Collaborate?
-            </span>
-          </motion.h2>
+          </p>
+          <div className="min-h-16 flex items-center justify-center md:justify-start">
+            <h2
+              ref={headingRef}
+              className="text-3xl sm:text-4xl md:text-6xl font-black text-ink tracking-tight uppercase min-h-[1.2em]"
+            >
+              {/* Typewriter target */}
+            </h2>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-6">
+        {/* CONTACT METHOD CARDS */}
+        <div className="flex flex-col gap-4 md:gap-6 max-w-4xl mx-auto">
           <ContactCard
             href="https://wa.me/6282214984819"
             icon={FaWhatsapp}
             title="Fast Response"
             label="WhatsApp Business"
-            color="#25D366"
           />
-          <ContactCard
-            href="mailto:azkazhanif@gmail.com"
-            icon={FaEnvelope}
-            title="Official Mail"
-            label="azkazhanif@gmail.com"
-            color="#3B82F6"
-          />
+
+          {/* Email Card with character splits */}
+          <div className="w-full flex flex-col items-center justify-center p-6 md:p-10 rounded-3xl bg-mist border border-ocean/10 relative overflow-hidden select-none mb-4 shadow-sm">
+            <p className="text-ocean/70 font-mono text-[10px] uppercase tracking-[0.3em] mb-4">
+              Official Mail
+            </p>
+            
+            <div className="flex flex-wrap justify-center items-center">
+              {emailStr.split("").map((char, index) => (
+                <span
+                  key={index}
+                  onMouseEnter={handleCharEnter}
+                  onMouseLeave={handleCharLeave}
+                  className="inline-block text-base sm:text-2xl md:text-4xl lg:text-5xl font-black text-ocean font-mono py-1 sm:px-0.5 tracking-tight transition-colors duration-300"
+                >
+                  {char}
+                </span>
+              ))}
+            </div>
+            
+            <a
+              href={`mailto:${emailStr}`}
+              data-magnetic
+              className="mt-6 py-3 text-xs text-ink font-bold tracking-widest uppercase hover:text-ocean transition-colors flex items-center gap-2"
+            >
+              SEND DIRECT EMAIL ↗
+            </a>
+          </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          className="mt-20 flex flex-col md:flex-row justify-between items-center border-t border-white/5 pt-12 gap-8"
-        >
-          <p className="text-gray-500 font-mono text-xs uppercase tracking-widest">
-            © 2026 Azka.dev — Built with Passion
+        {/* FOOTER AREA */}
+        <div className="mt-20 md:mt-24 flex flex-col md:flex-row justify-between items-center border-t border-ocean/10 pt-12 gap-8 text-center md:text-left">
+          <p className="text-ocean/60 font-mono text-xs uppercase tracking-widest">
+            © {new Date().getFullYear()} Azka Zufar Hanif — Built with Passion
           </p>
-          <div className="flex gap-8">
+          <div className="flex flex-wrap justify-center gap-6 md:gap-8">
             {["Instagram", "LinkedIn", "Github"].map((social) => (
               <a
                 key={social}
                 href="#"
-                className="text-xs font-bold text-white/40 hover:text-white transition-colors uppercase tracking-[0.2em]"
+                className="text-xs font-bold text-ocean/55 hover:text-ink transition-colors uppercase tracking-[0.2em] relative"
               >
                 {social}
               </a>
             ))}
           </div>
-        </motion.div>
+        </div>
+
       </div>
     </div>
   );
