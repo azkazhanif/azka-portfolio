@@ -29,10 +29,8 @@ Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 (config di 
 - `src/data/*.ts` + `src/types/*.ts` — **sumber konten website** (portfolio, experiences, services, tools). Website publik membaca data statis ini, bukan database.
 - `src/lib/theme.ts` — `themeColor(token, alpha)` untuk warna di tween GSAP.
 - `src/lib/scroll.ts` — `setScrollLock()` / `isScrollLocked()`.
-- `src/app/admin`, `src/app/login`, `src/app/api/admin/*`, `prisma/` — area admin terpisah (Prisma + PostgreSQL, JWT cookie `admin_token`, dilindungi `src/middleware.ts`). Tidak tersambung ke konten beranda.
-- `src/app/api/contact/route.ts` — kirim email via nodemailer (Gmail SMTP).
 
-Env yang dibutuhkan: `DATABASE_URL`, `JWT_SECRET`, `EMAIL_USER`, `EMAIL_PASS` (tidak ada di repo).
+**Website sepenuhnya statis**: tidak ada database, API route, middleware, maupun env yang dibutuhkan. Area admin, Prisma, login/JWT, dan API kirim email (nodemailer) sudah dihapus dengan sengaja — jangan ditambahkan kembali kecuali diminta. Kontak cukup lewat link WhatsApp & `mailto:`.
 
 ## Konvensi penting
 
@@ -77,4 +75,3 @@ Env yang dibutuhkan: `DATABASE_URL`, `JWT_SECRET`, `EMAIL_USER`, `EMAIL_PASS` (t
 - `public/images/about_parallax.png` masih bertuliskan "ANTIGRAVITY" di dalam gambar.
 - Link placeholder: tombol Resume (About), "View Proof" (Experience), "Live Preview" (detail project), Instagram/LinkedIn/Github (Contact).
 - Tahap 6 PRD: Lighthouse, uji Safari/iOS, hapus `framer-motion` jika memang tidak dipakai.
-- `src/middleware.ts` mencetak token admin ke log (`console.log(token)`) — sebaiknya dihapus.
